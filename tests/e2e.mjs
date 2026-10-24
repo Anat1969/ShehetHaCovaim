@@ -23,6 +23,7 @@ async function run(viewport, tag, colorScheme) {
   const browser = await pw.chromium.launch();
   const ctx = await browser.newContext({ viewport, locale: "he-IL", colorScheme });
   const page = await ctx.newPage();
+  if (process.env.AI_MENU_JS) await page.route("https://appofapp-gh.vercel.app/ai-menu.js", (r) => r.fulfill({ path: process.env.AI_MENU_JS, contentType: "application/javascript" }));
   page.on("pageerror", (e) => errors.push(`${tag}: ${e.message}`));
   page.on("console", (m) => m.type() === "error" && !/fonts\.g/.test(m.text()) && errors.push(`${tag} console: ${m.text()}`));
   page.on("dialog", (d) => d.accept());
@@ -54,9 +55,11 @@ async function run(viewport, tag, colorScheme) {
 
   // copy link
   await ctx.grantPermissions(["clipboard-read", "clipboard-write"], { origin: BASE });
-  if (mobile) { await page.click(".topbar__menu"); await page.click(".mobile-menu >> text=העתקת קישור"); }
-  else await page.click(".topnav >> text=העתקת קישור");
-  await page.waitForSelector(".toast");
+  (await page.locator("ai-menu .logo").isVisible()) ? ok("A&I logo button in the top bar") : fail("A&I logo button missing");
+  (await page.locator("header >> text=העתקת קישור").first().isVisible().catch(() => false)) ? fail("loose copy-link button in the bar") : ok("no loose development buttons in the bar");
+  await page.click("ai-menu .logo");
+  await page.click("ai-menu .item:has-text('העתקת קישור')");
+  await page.waitForTimeout(300);
   const clip = await page.evaluate(() => navigator.clipboard.readText());
   clip.includes("hat=green") ? ok("copy link holds the hat") : fail(`clipboard: ${clip}`);
 

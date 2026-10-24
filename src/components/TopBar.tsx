@@ -2,16 +2,12 @@ import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { useGame, useActiveJourney } from "@/store/game";
-import { DEV_CHAT_URL } from "@/lib/hats";
-import { useInstall, promptInstall } from "@/lib/install";
-import { copyText } from "@/lib/plan";
-import { toast } from "@/components/toast";
+import { AIMenu } from "@/components/AIMenu";
 
 export function TopBar() {
   const theme = useGame((s) => s.theme);
   const setTheme = useGame((s) => s.setTheme);
   const active = useActiveJourney();
-  const canInstall = useInstall((s) => !!s.event);
   const [open, setOpen] = useState(false);
   const loc = useLocation();
 
@@ -19,10 +15,6 @@ export function TopBar() {
     setOpen(false);
   }, [loc.pathname, loc.search]);
 
-  async function copyLink() {
-    const ok = await copyText(window.location.href);
-    toast(ok ? "הקישור הועתק" : "ההעתקה נכשלה");
-  }
   const toggleTheme = () => setTheme(theme === "obsidian" ? "chalk" : "obsidian");
   const themeLabel = theme === "obsidian" ? "מצב בהיר" : "מצב כהה";
 
@@ -35,10 +27,7 @@ export function TopBar() {
   );
   const tools = (
     <>
-      <button className="link" onClick={copyLink}>העתקת קישור</button>
-      <a href={DEV_CHAT_URL} target="_blank" rel="noreferrer">שיחת הפיתוח</a>
       <button className="link" onClick={toggleTheme} aria-label="החלפת מצב תצוגה">{themeLabel}</button>
-      {canInstall && <button className="link" onClick={promptInstall}>התקנת האפליקציה</button>}
     </>
   );
 
@@ -57,6 +46,7 @@ export function TopBar() {
         <button className="btn btn--ghost btn--sm topbar__menu" onClick={() => setOpen((v) => !v)} aria-expanded={open}>
           {open ? "סגירה" : "תפריט"}
         </button>
+        <AIMenu />
       </div>
       <AnimatePresence>
         {open && (
