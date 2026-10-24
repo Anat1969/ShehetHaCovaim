@@ -2,7 +2,8 @@ import { useEffect } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useActiveJourney, useGame, HAT_ORDER, totalScoreOf } from "@/store/game";
-import { HAT, HAT_FACES, hatColor } from "@/lib/hats";
+import { HAT, hatColor } from "@/lib/hats";
+import { Character } from "@/components/Character";
 import { planBlocks, planText, checkInIcs, download, copyText } from "@/lib/plan";
 import { toast } from "@/components/toast";
 
@@ -72,7 +73,7 @@ export default function Summary() {
               <div className="plan-block__bar" />
               <div className="plan-block__body">
                 <div className="row" style={{ alignItems: "center" }}>
-                  <span style={{ width: 30, height: 34 }}>{HAT_FACES[b.hat]}</span>
+                  <span style={{ width: 34, height: 38 }}><Character hat={b.hat} head still /></span>
                   <h3 style={{ fontSize: 17, fontWeight: 600 }}>{HAT[b.hat].name}</h3>
                   <span className="muted" style={{ fontSize: 14 }}>{b.title}</span>
                   <span className="spacer" />

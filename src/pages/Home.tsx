@@ -1,7 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useGame, HAT_ORDER, nextOpenHat, type CheckIn } from "@/store/game";
-import { HATS, HAT_FACES, hatColor } from "@/lib/hats";
+import { HATS, HAT, hatColor } from "@/lib/hats";
+import { Character } from "@/components/Character";
 import { toast } from "@/components/toast";
 
 const STEPS = [
@@ -61,7 +62,7 @@ export default function Home() {
             </p>
           )}
         </div>
-        <Orbit />
+        <Ensemble />
       </section>
 
       {due && (
@@ -105,9 +106,9 @@ export default function Home() {
             <motion.div key={h.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
               <Link to={`/hats?hat=${h.id}`} className="hatcard" style={{ display: "block", ["--hat" as string]: hatColor(h.id) }}>
                 <span className="hatcard__num">0{h.order}</span>
-                <motion.div className="hatcard__face" whileHover={{ y: -6, rotate: -4 }}>{HAT_FACES[h.id]}</motion.div>
+                <motion.div className="hatcard__face khaki" whileHover={{ y: -6 }}><Character hat={h.id} still /></motion.div>
                 <div className="hatcard__name">{h.name}</div>
-                <div className="hatcard__sub">{h.skill}</div>
+                <div className="hatcard__sub">{h.persona}, {h.skill}</div>
               </Link>
             </motion.div>
           ))}
@@ -142,42 +143,37 @@ export default function Home() {
   );
 }
 
-function Orbit() {
+// Group portrait on khaki, after the reference: tall figures behind, small ones in front, overlapping.
+const CAST: { hat: keyof typeof HAT; left: number; bottom: number; width: number; z: number; delay: number }[] = [
+  { hat: "black", left: 0, bottom: 31, width: 37, z: 1, delay: 0.1 },
+  { hat: "white", left: 33, bottom: 37, width: 33, z: 0, delay: 0 },
+  { hat: "blue", left: 63, bottom: 31, width: 37, z: 1, delay: 0.2 },
+  { hat: "red", left: 4, bottom: 2, width: 35, z: 2, delay: 0.3 },
+  { hat: "green", left: 61, bottom: 3, width: 35, z: 2, delay: 0.5 },
+  { hat: "yellow", left: 35, bottom: 0, width: 30, z: 3, delay: 0.4 },
+];
+
+function Ensemble() {
   const nav = useNavigate();
   return (
-    <motion.div className="stage" initial={{ opacity: 0, scale: 0.92, rotateX: 18 }} animate={{ opacity: 1, scale: 1, rotateX: 0 }} transition={{ duration: 1, ease: [0.2, 0.8, 0.2, 1] }}>
-      <div className="stage__ring" />
-      <div className="stage__ring stage__ring--2" />
-      <motion.div style={{ position: "absolute", inset: 0 }} animate={{ rotate: 360 }} transition={{ duration: 90, repeat: Infinity, ease: "linear" }}>
-        {HATS.map((h, i) => {
-          const a = (Math.PI * 2 * i) / 6 - Math.PI / 2;
-          return (
-            <motion.button
-              key={h.id}
-              className="orbit-hat"
-              aria-label={h.name}
-              style={{ left: `${50 + Math.cos(a) * 38}%`, top: `${50 + Math.sin(a) * 38}%` }}
-              animate={{ rotate: -360 }}
-              transition={{ duration: 90, repeat: Infinity, ease: "linear" }}
-              whileHover={{ scale: 1.14 }}
-              onClick={() => nav(`/hats?hat=${h.id}`)}
-            >
-              <motion.div animate={{ y: [0, -6, 0] }} transition={{ duration: 3.2, repeat: Infinity, delay: i * 0.4, ease: "easeInOut" }}>
-                {HAT_FACES[h.id]}
-              </motion.div>
-            </motion.button>
-          );
-        })}
-      </motion.div>
-      <div className="stage__center">
-        <div>
-          <div style={{ fontSize: "clamp(40px, 7vw, 64px)", fontWeight: 200, lineHeight: 1 }}>6</div>
-          <div className="eyebrow" style={{ marginTop: 6 }}>זוויות</div>
-          <div style={{ width: 36, height: 1, background: "var(--line-2)", margin: "10px auto" }} />
-          <div style={{ fontSize: "clamp(22px, 3.4vw, 30px)", fontWeight: 300, lineHeight: 1 }}>1</div>
-          <div className="eyebrow" style={{ marginTop: 6 }}>צעד</div>
-        </div>
-      </div>
+    <motion.div className="ensemble khaki" initial={{ opacity: 0, scale: 0.95, rotateX: 12 }} animate={{ opacity: 1, scale: 1, rotateX: 0 }} transition={{ duration: 0.9, ease: [0.2, 0.8, 0.2, 1] }}>
+      <span className="ensemble__title">שישה כובעים, שש דמויות</span>
+      {CAST.map((c) => (
+        <motion.button
+          key={c.hat}
+          className="ensemble__fig"
+          aria-label={`${HAT[c.hat].name}, ${HAT[c.hat].persona}`}
+          style={{ left: `${c.left}%`, bottom: `${c.bottom}%`, width: `${c.width}%`, zIndex: c.z }}
+          initial={{ y: 60, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.3 + c.delay, type: "spring", stiffness: 120, damping: 14 }}
+          whileHover={{ y: -10, scale: 1.04, zIndex: 9 }}
+          onClick={() => nav(`/hats?hat=${c.hat}`)}
+        >
+          <Character hat={c.hat} />
+          <span className="ensemble__name">{HAT[c.hat].persona}</span>
+        </motion.button>
+      ))}
     </motion.div>
   );
 }

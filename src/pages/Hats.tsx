@@ -1,6 +1,7 @@
 import { Link, useSearchParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { HATS, HAT, HAT_FACES, hatColor } from "@/lib/hats";
+import { HATS, HAT, hatColor } from "@/lib/hats";
+import { Character } from "@/components/Character";
 import type { HatId } from "@/store/game";
 
 export default function Hats() {
@@ -29,7 +30,7 @@ export default function Hats() {
             whileTap={{ scale: 0.98 }}
           >
             <span className="hatcard__num">0{h.order}</span>
-            <div className="hatcard__face">{HAT_FACES[h.id]}</div>
+            <div className="hatcard__face khaki"><Character hat={h.id} still={h.id !== active.id} /></div>
             <div className="hatcard__name">{h.name}</div>
             <div className="hatcard__sub">{h.subtitle}</div>
           </motion.button>
@@ -48,11 +49,12 @@ export default function Hats() {
         >
           <div className="hatbar" style={{ background: "var(--hat)", borderRadius: 0 }} />
           <div style={{ padding: "22px 24px", borderBottom: "1px solid var(--line)", display: "grid", gridTemplateColumns: "auto minmax(0,1fr)", gap: 18, alignItems: "center" }}>
-            <div style={{ width: 60, height: 68 }}>{HAT_FACES[active.id]}</div>
+            <div className="khaki" style={{ width: 130, height: 190, borderRadius: 18, padding: "12px 10px 4px" }}><Character hat={active.id} /></div>
             <div>
               <p className="eyebrow">חדר {active.order} מתוך 6</p>
               <h2 style={{ fontSize: 30, fontWeight: 300, color: "var(--hat)", marginTop: 4 }}>{active.name}</h2>
-              <p className="muted" style={{ fontSize: 15 }}>{active.subtitle}. {active.task}</p>
+              <p className="muted" style={{ fontSize: 15 }}>{active.persona}. {active.subtitle}. {active.task}</p>
+              <p style={{ fontSize: 14.5, marginTop: 8, color: "var(--fg-2)" }}><span className="eyebrow">שפת גוף</span> {active.body}</p>
             </div>
           </div>
           <div className="why" style={{ margin: "20px 24px 0" }}>{active.why}</div>

@@ -2,7 +2,8 @@ import { ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { useActiveJourney, useGame, HAT_ORDER, type HatId } from "@/store/game";
-import { HAT, HAT_FACES, hatColor } from "@/lib/hats";
+import { HAT, hatColor } from "@/lib/hats";
+import { Character } from "@/components/Character";
 
 type Props = {
   hat: HatId;
@@ -38,12 +39,13 @@ export function RoomShell({ hat, children, feedback, status, canContinue, score 
       </div>
 
       <div className="room-head">
-        <motion.div className="room-head__face" initial={{ y: -30, rotate: -12, opacity: 0 }} animate={{ y: 0, rotate: 0, opacity: 1 }} transition={{ type: "spring", stiffness: 160, damping: 14 }}>
-          {HAT_FACES[hat]}
+        <motion.div className="room-head__face khaki" initial={{ y: -30, rotate: -12, opacity: 0 }} animate={{ y: 0, rotate: 0, opacity: 1 }} transition={{ type: "spring", stiffness: 160, damping: 14 }}>
+          <Character hat={hat} />
         </motion.div>
         <div>
           <p className="eyebrow">חדר {idx + 1} מתוך 6, {info.skill}</p>
           <h1 className="title" style={{ color: "var(--hat)", marginTop: 8 }}>{info.name}</h1>
+          <p className="mono muted" style={{ fontSize: 12.5, marginTop: 4 }}>{info.persona}</p>
           <p style={{ fontSize: 18, fontWeight: 300, marginTop: 6, color: "var(--fg-2)" }}>{info.task}</p>
         </div>
       </div>

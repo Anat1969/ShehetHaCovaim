@@ -1,7 +1,8 @@
 import { Link, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useActiveJourney, HAT_ORDER, roomStatus } from "@/store/game";
-import { HAT, HAT_FACES, hatColor, TYPE_LABEL } from "@/lib/hats";
+import { HAT, hatColor, TYPE_LABEL } from "@/lib/hats";
+import { Character } from "@/components/Character";
 
 const STATE_LABEL = { done: "הושלם", active: "פתוח", locked: "נעול" } as const;
 
@@ -43,7 +44,7 @@ export default function JourneyMap() {
             <>
               <div className="eyebrow">0{i + 1}</div>
               <motion.div className="station__face" animate={st === "active" ? { y: [0, -5, 0] } : {}} transition={{ duration: 2.4, repeat: Infinity }}>
-                {HAT_FACES[h]}
+                <Character hat={h} head still={st !== "active"} />
               </motion.div>
               <div style={{ fontWeight: 600 }}>{HAT[h].name}</div>
               <div className="muted" style={{ fontSize: 12.5, lineHeight: 1.4, minHeight: 34 }}>{HAT[h].skill}</div>

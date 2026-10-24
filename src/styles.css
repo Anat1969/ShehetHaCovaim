@@ -303,11 +303,11 @@ select.field { appearance: none; cursor: pointer; }
 }
 .hatcard[aria-pressed="true"] { border-color: var(--hat); box-shadow: var(--shadow-2), 0 0 0 1px var(--hat); }
 .hatcard[aria-pressed="true"]::before, .hatcard:hover::before { opacity: 1; }
-.hatcard__face { width: 74px; height: 84px; margin: 0 auto 10px; position: relative; }
-.hatcard__face svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.25)); }
+.hatcard__face { height: 190px; margin: -8px -4px 12px; position: relative; border-radius: 14px; padding: 14px 0 6px; box-shadow: inset 0 1px 0 rgba(255,255,255,.4); }
+.hatcard__face .ch { filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.25)); }
 .hatcard__name { font-weight: 600; font-size: 16px; position: relative; }
 .hatcard__sub { font-size: 12.5px; color: var(--muted); position: relative; }
-.hatcard__num { position: absolute; top: 12px; inset-inline-start: 14px; font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--muted); }
+.hatcard__num { position: absolute; z-index: 2; color: #2a2420 !important; top: 14px; inset-inline-start: 16px; font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--muted); }
 
 .detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 .detail > div { padding: 22px 24px; }
@@ -336,8 +336,7 @@ select.field { appearance: none; cursor: pointer; }
 .station[data-status="active"] { border-color: var(--hat); box-shadow: var(--shadow-2), 0 0 0 1px var(--hat), 0 20px 50px -24px var(--hat); }
 .station[data-status="locked"] { opacity: 0.42; }
 .station[data-status="done"] .station__state { color: var(--hat); }
-.station__face { width: 52px; height: 58px; margin: 6px auto 8px; }
-.station__face svg { width: 100%; height: 100%; }
+.station__face { width: 62px; height: 66px; margin: 6px auto 8px; }
 .station__state { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.1em; }
 
 .progress { display: flex; gap: 6px; }
@@ -346,8 +345,8 @@ select.field { appearance: none; cursor: pointer; }
 
 /* ---------- Room ---------- */
 .room-head { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 22px; align-items: center; margin: 28px 0 32px; }
-.room-head__face { width: 88px; height: 100px; }
-.room-head__face svg { width: 100%; height: 100%; filter: drop-shadow(0 16px 20px rgba(0, 0, 0, 0.35)); }
+.room-head__face { width: 132px; height: 160px; border-radius: 22px; padding: 10px 14px 0; overflow: hidden; }
+.room-head__face .ch { filter: drop-shadow(0 10px 12px rgba(40, 25, 5, .25)); }
 .room-grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 28px; align-items: start; }
 .mirror { position: sticky; top: 84px; padding: 20px; }
 .mirror li { list-style: none; padding: 8px 12px 8px 0; border-inline-start: 2px solid var(--hat); padding-inline-start: 12px; font-size: 14.5px; line-height: 1.55; }
@@ -477,7 +476,7 @@ select.field { appearance: none; cursor: pointer; }
   .statgrid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .history { grid-template-columns: minmax(0, 1fr); }
   .room-head { grid-template-columns: minmax(0, 1fr); gap: 8px; }
-  .room-head__face { width: 64px; height: 72px; }
+  .room-head__face { width: 104px; height: 128px; }
   .card--pad { padding: 18px; }
   .modal { padding: 22px; }
   .goalstrip { grid-template-columns: minmax(0, 1fr); gap: 2px; }
@@ -492,3 +491,68 @@ select.field { appearance: none; cursor: pointer; }
   body { background: #fff; color: #000; }
   .card { box-shadow: none; border-color: #ccc; background: #fff; }
 }
+
+/* ---------- Characters: body language in motion ---------- */
+.ch { width: 100%; height: 100%; display: block; overflow: visible; }
+.ch * { transform-box: view-box; }
+.ch .ch-blink { transform-box: fill-box; transform-origin: center; animation: ch-blink 5.2s infinite; }
+.ch .ch-bob-soft { animation: ch-bob 4.6s ease-in-out infinite; }
+.ch .ch-sway { animation: ch-sway 3.4s ease-in-out infinite; }
+.ch .ch-sway-slow { animation: ch-sway 6s ease-in-out infinite; }
+.ch .ch-wave { animation: ch-wave 2.2s ease-in-out infinite; }
+.ch .ch-wave-r { animation: ch-wave-r 2.2s ease-in-out infinite; }
+.ch .ch-tap { animation: ch-tap 1.8s ease-in-out infinite; }
+.ch .ch-tilt-soft { animation: ch-tilt-soft 7s ease-in-out infinite; }
+.ch .ch-tilt { animation: ch-tilt 4.4s ease-in-out infinite; }
+.ch .ch-iris { animation: ch-look 6.5s ease-in-out infinite; }
+.ch .ch-foot { animation: ch-foot 1.2s ease-in-out infinite; }
+.ch .ch-bounce { animation: ch-bounce 1.4s cubic-bezier(.4, 0, .3, 1) infinite; }
+.ch .ch-shadow-bounce { animation: ch-shadow 1.4s cubic-bezier(.4, 0, .3, 1) infinite; }
+.ch .ch-kick { animation: ch-kick 2.6s ease-in-out infinite; }
+.ch .ch-stem { animation: ch-stem 3.6s ease-in-out infinite; }
+.ch .ch-conduct { animation: ch-conduct 2s ease-in-out infinite; }
+.ch--still, .ch--still * { animation: none !important; }
+
+@keyframes ch-blink { 0%, 93%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.08); } }
+@keyframes ch-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2.5px); } }
+@keyframes ch-sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@keyframes ch-wave { 0%, 100% { transform: rotate(-10deg); } 50% { transform: rotate(12deg); } }
+@keyframes ch-wave-r { 0%, 100% { transform: rotate(10deg); } 50% { transform: rotate(-12deg); } }
+@keyframes ch-tap { 0%, 60%, 100% { transform: rotate(0); } 70% { transform: rotate(-9deg); } 80% { transform: rotate(0); } 90% { transform: rotate(-9deg); } }
+@keyframes ch-tilt-soft { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-3deg); } }
+@keyframes ch-tilt { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(5deg); } }
+@keyframes ch-look { 0%, 35%, 100% { transform: translateX(0); } 45%, 75% { transform: translateX(3px); } }
+@keyframes ch-foot { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-10deg); } }
+@keyframes ch-bounce { 0%, 100% { transform: translateY(0); } 45% { transform: translateY(-9px); } 60% { transform: translateY(-9px); } }
+@keyframes ch-shadow { 0%, 100% { transform: scaleX(1); opacity: .16; } 50% { transform: scaleX(.7); opacity: .08; } }
+@keyframes ch-kick { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-14deg); } }
+@keyframes ch-stem { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(6deg); } }
+@keyframes ch-conduct { 0%, 100% { transform: rotate(-18deg); } 25% { transform: rotate(8deg); } 50% { transform: rotate(-6deg); } 75% { transform: rotate(14deg); } }
+
+/* Khaki stage, the ground the characters stand on (from the reference palette) */
+.khaki {
+  --khaki-1: #d8c793;
+  --khaki-2: #bfae7c;
+  background:
+    radial-gradient(120% 90% at 50% 20%, rgba(255, 250, 230, .55), transparent 60%),
+    radial-gradient(80% 50% at 50% 100%, rgba(80, 60, 20, .18), transparent 70%),
+    linear-gradient(180deg, var(--khaki-1), var(--khaki-2));
+  border: 1px solid rgba(60, 45, 15, .25);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4), var(--shadow-2);
+}
+:root[data-theme="obsidian"] .khaki { --khaki-1: #c9b884; --khaki-2: #a8975f; }
+
+.ensemble { position: relative; aspect-ratio: 1 / 1.1; border-radius: 28px; overflow: hidden; }
+.ensemble__fig { position: absolute; padding: 0; background: none; border: 0; }
+.ensemble__fig .ch { filter: drop-shadow(0 10px 10px rgba(40, 25, 5, .18)); }
+.ensemble__name {
+  position: absolute; bottom: -2px; inset-inline: 0; margin: 0 auto; width: max-content;
+  font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: .1em;
+  padding: 3px 8px; border-radius: 6px; background: rgba(42, 36, 32, .85); color: #fbf6e9;
+  opacity: 0; transform: translateY(4px); transition: opacity .2s, transform .2s;
+}
+.ensemble__fig:hover .ensemble__name, .ensemble__fig:focus-visible .ensemble__name { opacity: 1; transform: none; }
+.ensemble__title { position: absolute; top: 18px; inset-inline-start: 22px; color: #2a2420; font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: .22em; opacity: .7; }
+.room-head__face .ch, .hats-portrait .ch { height: auto; }
+
+@media (max-width: 760px) { .hatcard__face { height: 150px; } }
