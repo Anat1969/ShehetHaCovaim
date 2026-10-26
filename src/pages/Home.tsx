@@ -1,3 +1,4 @@
+import type { PointerEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useGame, HAT_ORDER, nextOpenHat, type CheckIn } from "@/store/game";
@@ -144,35 +145,58 @@ export default function Home() {
 }
 
 // Group portrait on khaki, after the reference: tall figures behind, small ones in front, overlapping.
-const CAST: { hat: keyof typeof HAT; left: number; bottom: number; width: number; z: number; delay: number }[] = [
-  { hat: "black", left: 0, bottom: 31, width: 37, z: 1, delay: 0.1 },
-  { hat: "white", left: 33, bottom: 37, width: 33, z: 0, delay: 0 },
-  { hat: "blue", left: 63, bottom: 31, width: 37, z: 1, delay: 0.2 },
-  { hat: "red", left: 4, bottom: 2, width: 35, z: 2, delay: 0.3 },
-  { hat: "green", left: 61, bottom: 3, width: 35, z: 2, delay: 0.5 },
-  { hat: "yellow", left: 35, bottom: 0, width: 30, z: 3, delay: 0.4 },
+// Group portrait on khaki: tall figures behind, the front row larger and sharper, overlapping.
+// Each layer drifts with the pointer by its depth, so the scene reads as space, not a flat row.
+const CAST: { hat: keyof typeof HAT; left: number; bottom: number; width: number; z: number; depth: number; delay: number }[] = [
+  { hat: "black", left: -3, bottom: 31, width: 40, z: 1, depth: 5, delay: 0.1 },
+  { hat: "white", left: 31, bottom: 37, width: 38, z: 0, depth: 3, delay: 0 },
+  { hat: "blue", left: 63, bottom: 31, width: 40, z: 1, depth: 5, delay: 0.2 },
+  { hat: "red", left: 0, bottom: 1, width: 42, z: 2, depth: 10, delay: 0.3 },
+  { hat: "green", left: 58, bottom: 1, width: 42, z: 2, depth: 10, delay: 0.5 },
+  { hat: "yellow", left: 29, bottom: -3, width: 42, z: 3, depth: 14, delay: 0.4 },
 ];
 
 function Ensemble() {
   const nav = useNavigate();
+  function onMove(e: PointerEvent<HTMLDivElement>) {
+    const r = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty("--mx", (((e.clientX - r.left) / r.width - 0.5) * 2).toFixed(3));
+    e.currentTarget.style.setProperty("--my", (((e.clientY - r.top) / r.height - 0.5) * 2).toFixed(3));
+  }
+  function onLeave(e: PointerEvent<HTMLDivElement>) {
+    e.currentTarget.style.setProperty("--mx", "0");
+    e.currentTarget.style.setProperty("--my", "0");
+  }
   return (
-    <motion.div className="ensemble khaki" initial={{ opacity: 0, scale: 0.95, rotateX: 12 }} animate={{ opacity: 1, scale: 1, rotateX: 0 }} transition={{ duration: 0.9, ease: [0.2, 0.8, 0.2, 1] }}>
+    <motion.div
+      className="ensemble khaki"
+      onPointerMove={onMove}
+      onPointerLeave={onLeave}
+      initial={{ opacity: 0, scale: 0.95, rotateX: 12 }}
+      animate={{ opacity: 1, scale: 1, rotateX: 0 }}
+      transition={{ duration: 0.9, ease: [0.2, 0.8, 0.2, 1] }}
+    >
       <span className="ensemble__title">שישה כובעים, שש דמויות</span>
       {CAST.map((c) => (
-        <motion.button
+        <div
           key={c.hat}
           className="ensemble__fig"
-          aria-label={`${HAT[c.hat].name}, ${HAT[c.hat].persona}`}
-          style={{ left: `${c.left}%`, bottom: `${c.bottom}%`, width: `${c.width}%`, zIndex: c.z }}
-          initial={{ y: 60, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3 + c.delay, type: "spring", stiffness: 120, damping: 14 }}
-          whileHover={{ y: -10, scale: 1.04, zIndex: 9 }}
-          onClick={() => nav(`/hats?hat=${c.hat}`)}
+          data-row={c.z < 2 ? "back" : "front"}
+          style={{ left: `${c.left}%`, bottom: `${c.bottom}%`, width: `${c.width}%`, zIndex: c.z, ["--depth" as string]: c.depth }}
         >
-          <Character hat={c.hat} />
-          <span className="ensemble__name">{HAT[c.hat].persona}</span>
-        </motion.button>
+          <motion.button
+            className="ensemble__btn"
+            aria-label={`${HAT[c.hat].name}, ${HAT[c.hat].persona}`}
+            initial={{ y: 60, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3 + c.delay, type: "spring", stiffness: 120, damping: 14 }}
+            whileHover={{ y: -12, scale: 1.04 }}
+            onClick={() => nav(`/hats?hat=${c.hat}`)}
+          >
+            <Character hat={c.hat} eager />
+            <span className="ensemble__name">{HAT[c.hat].persona}</span>
+          </motion.button>
+        </div>
       ))}
     </motion.div>
   );

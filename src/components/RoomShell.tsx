@@ -40,7 +40,7 @@ export function RoomShell({ hat, children, feedback, status, canContinue, score 
 
       <div className="room-head">
         <motion.div className="room-head__face khaki" initial={{ y: -30, rotate: -12, opacity: 0 }} animate={{ y: 0, rotate: 0, opacity: 1 }} transition={{ type: "spring", stiffness: 160, damping: 14 }}>
-          <Character hat={hat} />
+          <Character hat={hat} crop="bust" eager />
         </motion.div>
         <div>
           <p className="eyebrow">חדר {idx + 1} מתוך 6, {info.skill}</p>

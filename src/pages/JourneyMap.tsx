@@ -43,7 +43,7 @@ export default function JourneyMap() {
           const body = (
             <>
               <div className="eyebrow">0{i + 1}</div>
-              <motion.div className="station__face" animate={st === "active" ? { y: [0, -5, 0] } : {}} transition={{ duration: 2.4, repeat: Infinity }}>
+              <motion.div className="station__face khaki" animate={st === "active" ? { y: [0, -5, 0] } : {}} transition={{ duration: 2.4, repeat: Infinity }}>
                 <Character hat={h} head still={st !== "active"} />
               </motion.div>
               <div style={{ fontWeight: 600 }}>{HAT[h].name}</div>
