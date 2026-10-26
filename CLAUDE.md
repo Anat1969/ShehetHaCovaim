@@ -6,7 +6,7 @@
 
 ## קבוע
 - עברית ו-RTL. בלי אייקונים או סמלים, גם לא בכפתורים (בלי וי, חיצים, איקס).
-- סרגל עליון קבוע בכל הדפים: שם האפליקציה מקשר לדף הבית, "העתקת קישור" (מעתיק את הכתובת כולל ?hat=), "שיחת הפיתוח", מצב כהה/בהיר, "התקנת האפליקציה" כש-Chrome מציע.
+- סרגל עליון קבוע בכל הדפים: שם האפליקציה מקשר לדף הבית, ניווט, מצב כהה/בהיר, וכפתור הלוגו A&I. "העתקת קישור" (הכתובת כולל ?hat=), "שיחת הפיתוח" ו"התקנת האפליקציה" נמצאים רק בתוך כפתור הלוגו.
 - שפת עיצוב: אדריכלית, שכבות, עומק וגרדיאנטים. IBM Plex Sans Hebrew דק בכותרות גדולות, IBM Plex Mono לתוויות. צבעי הכובעים נושאי משמעות ונשמרים.
 - נתונים: localStorage בלבד (מפתח hats-v2). תוכן אישי, אין שרת. Supabase רק אם יתבקש סנכרון בין מכשירים.
 - PWA: public/manifest.webmanifest, public/sw.js (דף מהרשת, נכסים מהמטמון), אייקון בלי טקסט ב-public/icons.
@@ -34,3 +34,6 @@
 - AnimatePresence עם mode="wait" סביב הדפים נתקע כשיש בדף אנימציות layout. מעבר דפים: כניסה בלבד.
 - `.btn` מוגדר אחרי `.topbar__menu` ב-CSS, לכן ההסתרה צריכה סלקטור חזק יותר.
 - תוכן שמופיע ב-whileInView לא יודפס אם לא נגללו אליו. בדפים להדפסה: animate.
+
+## A&I logo button
+The top bar holds only the app name (links home), content navigation, and ONE logo button "אד' ענת שטיבלמן A&I" (`<ai-menu>` from https://appofapp-gh.vercel.app/ai-menu.js). Every editing and development action (העתקת קישור, שיחת הפיתוח, פרויקט המחקר, התקנת האפליקציה, edit mode, add, delete) lives only inside it, never as loose buttons. Standard: https://github.com/Anat1969/AppOfApp-GH/blob/main/docs/ai-menu-standard.md
