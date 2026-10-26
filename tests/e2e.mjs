@@ -21,7 +21,7 @@ async function noHScroll(page, label) {
 
 async function run(viewport, tag, colorScheme) {
   const browser = await pw.chromium.launch();
-  const ctx = await browser.newContext({ viewport, locale: "he-IL", colorScheme });
+  const ctx = await browser.newContext({ viewport, locale: "he-IL", colorScheme, hasTouch: viewport.width < 800, isMobile: viewport.width < 800 });
   const page = await ctx.newPage();
   if (process.env.AI_MENU_JS) await page.route("https://appofapp-gh.vercel.app/ai-menu.js", (r) => r.fulfill({ path: process.env.AI_MENU_JS, contentType: "application/javascript" }));
   page.on("pageerror", (e) => errors.push(`${tag}: ${e.message}`));
@@ -34,6 +34,16 @@ async function run(viewport, tag, colorScheme) {
   await page.waitForSelector(".display");
   await noHScroll(page, `${tag} home`);
   await shot("01-home");
+
+  // Characters step out of the frame and come back
+  if (mobile) await page.tap(".ensemble__fig >> nth=1");
+  else await page.hover(".ensemble__fig >> nth=1");
+  await page.waitForTimeout(500);
+  (await page.locator(".roamer__traveler").count()) === 1 ? ok("character leaves the frame") : fail("no traveler");
+  page.url().endsWith("/") ? ok("release does not navigate") : fail("release navigated");
+  await page.mouse.move(2, 2);
+  await page.waitForSelector(".roamer__traveler", { state: "detached", timeout: 12000 });
+  ok("character returns to its slot");
 
   // top bar
   if (mobile) {

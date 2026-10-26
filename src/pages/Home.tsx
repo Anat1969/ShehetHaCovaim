@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useGame, HAT_ORDER, nextOpenHat, type CheckIn } from "@/store/game";
 import { HATS, HAT, hatColor } from "@/lib/hats";
-import { Character } from "@/components/Character";
+import { Roamer } from "@/components/Roamer";
 import { toast } from "@/components/toast";
 
 const STEPS = [
@@ -107,7 +107,7 @@ export default function Home() {
             <motion.div key={h.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
               <Link to={`/hats?hat=${h.id}`} className="hatcard" style={{ display: "block", ["--hat" as string]: hatColor(h.id) }}>
                 <span className="hatcard__num">0{h.order}</span>
-                <motion.div className="hatcard__face khaki" whileHover={{ y: -6 }}><Character hat={h.id} still /></motion.div>
+                <motion.div className="hatcard__face khaki" whileHover={{ y: -6 }}><Roamer hat={h.id} still /></motion.div>
                 <div className="hatcard__name">{h.name}</div>
                 <div className="hatcard__sub">{h.persona}, {h.skill}</div>
               </Link>
@@ -176,7 +176,7 @@ function Ensemble() {
       animate={{ opacity: 1, scale: 1, rotateX: 0 }}
       transition={{ duration: 0.9, ease: [0.2, 0.8, 0.2, 1] }}
     >
-      <span className="ensemble__title">שישה כובעים, שש דמויות</span>
+      <span className="ensemble__title">שש דמויות. <span className="on-hover">ריחוף מעל דמות משחרר אותה לטיול</span><span className="on-touch">נגיעה בדמות משחררת אותה לטיול</span></span>
       {CAST.map((c) => (
         <div
           key={c.hat}
@@ -193,7 +193,7 @@ function Ensemble() {
             whileHover={{ y: -12, scale: 1.04 }}
             onClick={() => nav(`/hats?hat=${c.hat}`)}
           >
-            <Character hat={c.hat} eager />
+            <Roamer hat={c.hat} />
             <span className="ensemble__name">{HAT[c.hat].persona}</span>
           </motion.button>
         </div>
