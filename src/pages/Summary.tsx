@@ -73,7 +73,7 @@ export default function Summary() {
               <div className="plan-block__bar" />
               <div className="plan-block__body">
                 <div className="row" style={{ alignItems: "center" }}>
-                  <span style={{ width: 34, height: 38 }}><Character hat={b.hat} head still /></span>
+                  <span style={{ width: 40, height: 40, borderRadius: "50%", overflow: "hidden", flex: "0 0 auto", boxShadow: "inset 0 0 0 1px var(--line-2)" }} className="khaki"><Character hat={b.hat} head still /></span>
                   <h3 style={{ fontSize: 17, fontWeight: 600 }}>{HAT[b.hat].name}</h3>
                   <span className="muted" style={{ fontSize: 14 }}>{b.title}</span>
                   <span className="spacer" />
