@@ -2,6 +2,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { HATS, HAT, hatColor } from "@/lib/hats";
 import { Character } from "@/components/Character";
+import { Roamer } from "@/components/Roamer";
 import type { HatId } from "@/store/game";
 
 export default function Hats() {
@@ -30,7 +31,7 @@ export default function Hats() {
             whileTap={{ scale: 0.98 }}
           >
             <span className="hatcard__num">0{h.order}</span>
-            <div className="hatcard__face khaki"><Character hat={h.id} still={h.id !== active.id} /></div>
+            <div className="hatcard__face khaki"><Roamer hat={h.id} still={h.id !== active.id} /></div>
             <div className="hatcard__name">{h.name}</div>
             <div className="hatcard__sub">{h.subtitle}</div>
           </motion.button>

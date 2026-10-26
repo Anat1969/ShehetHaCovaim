@@ -556,3 +556,15 @@ select.field { appearance: none; cursor: pointer; }
 @media (max-width: 760px) { .hatcard__face { height: 190px; } }
 .hatcard__face .ch--full img { scale: 1.1; }
 .hatcard__face { overflow: hidden; }
+
+/* ---------- Roaming: a character steps out of its frame on hover ---------- */
+.roamer { position: relative; width: 100%; height: 100%; }
+.roamer .ch img { transition: opacity .4s ease, filter .4s ease; }
+.roamer[data-away] > .ch img { opacity: .14; filter: grayscale(1) blur(1.5px); }
+.roamer__traveler { position: fixed; z-index: 45; pointer-events: none; will-change: transform; }
+.roamer__traveler .ch--full img {
+  filter: drop-shadow(0 28px 22px rgba(20, 12, 2, .38)) drop-shadow(0 4px 4px rgba(20, 12, 2, .25));
+}
+.roamer__traveler .ch--full::after { bottom: -4%; height: 6%; opacity: .8; }
+.on-touch { display: none; }
+@media (hover: none) { .on-hover { display: none; } .on-touch { display: inline; } }
