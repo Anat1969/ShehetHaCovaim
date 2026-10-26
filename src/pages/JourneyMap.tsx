@@ -1,14 +1,42 @@
+import { useEffect, useRef, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useActiveJourney, HAT_ORDER, roomStatus } from "@/store/game";
 import { HAT, hatColor, TYPE_LABEL } from "@/lib/hats";
 import { Character } from "@/components/Character";
+import { Guide, boxOf, useOnce, type Box } from "@/components/Guide";
 
 const STATE_LABEL = { done: "הושלם", active: "פתוח", locked: "נעול" } as const;
 
 export default function JourneyMap() {
   const j = useActiveJourney();
   if (!j) return <Navigate to="/start" replace />;
+  return <Board key={j.id} />;
+}
+
+function Board() {
+  const j = useActiveJourney()!;
+  const nextHat = HAT_ORDER.find((h) => !j.rooms[h].completed);
+  // The next room's character steps out of its station, walks to the button and back, once per visit.
+  const fresh = useOnce(`map:${j.id}:${nextHat ?? "done"}`);
+  const stationRef = useRef<HTMLDivElement>(null);
+  const ctaRef = useRef<HTMLAnchorElement>(null);
+  const [lead, setLead] = useState<{ from: Box; to: Box } | null>(null);
+  useEffect(() => {
+    if (!fresh || !nextHat) return;
+    const t = setTimeout(() => {
+      const st = boxOf(stationRef.current);
+      const cta = boxOf(ctaRef.current);
+      if (!st || !cta) return;
+      const w = 120, h = 180;
+      const W = 150, H = 225;
+      setLead({
+        from: { left: st.left + st.width / 2 - w / 2, top: st.top + st.height / 2 - h * 0.17, width: w, height: h },
+        to: { left: cta.left + cta.width / 2 - W / 2, top: cta.top - H + 10, width: W, height: H },
+      });
+    }, 1000);
+    return () => clearTimeout(t);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const rooms = j.rooms;
   const completed = HAT_ORDER.filter((h) => rooms[h].completed).length;
@@ -43,7 +71,7 @@ export default function JourneyMap() {
           const body = (
             <>
               <div className="eyebrow">0{i + 1}</div>
-              <motion.div className="station__face khaki" animate={st === "active" ? { y: [0, -5, 0] } : {}} transition={{ duration: 2.4, repeat: Infinity }}>
+              <motion.div ref={h === nextHat ? stationRef : undefined} className="station__face khaki" animate={st === "active" ? { y: [0, -5, 0] } : {}} transition={{ duration: 2.4, repeat: Infinity }}>
                 <Character hat={h} head still={st !== "active"} />
               </motion.div>
               <div style={{ fontWeight: 600 }}>{HAT[h].name}</div>
@@ -67,11 +95,22 @@ export default function JourneyMap() {
         })}
       </ol>
 
+      {lead && nextHat && (
+        <Guide
+          hat={nextHat}
+          from={lead.from}
+          to={lead.to}
+          caption={`${HAT[nextHat].persona}: החדר שלי הבא בתור. ${HAT[nextHat].task}`}
+          returnHome
+          onDone={() => setLead(null)}
+        />
+      )}
+
       <div className="row" style={{ marginTop: 36 }}>
         {allDone ? (
           <Link to="/summary" className="btn btn--primary">לתכנית הפעולה</Link>
         ) : (
-          <Link to={`/room/${HAT_ORDER.find((h) => !rooms[h].completed)}`} className="btn btn--primary">
+          <Link ref={ctaRef} to={`/room/${HAT_ORDER.find((h) => !rooms[h].completed)}`} className="btn btn--primary">
             {completed === 0 ? "כניסה לחדר הראשון" : "המשך לחדר הבא"}
           </Link>
         )}

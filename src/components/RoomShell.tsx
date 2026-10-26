@@ -1,9 +1,10 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { useActiveJourney, useGame, HAT_ORDER, type HatId } from "@/store/game";
 import { HAT, hatColor } from "@/lib/hats";
 import { Character } from "@/components/Character";
+import { Guide, boxOf, useOnce, type Box } from "@/components/Guide";
 
 type Props = {
   hat: HatId;
@@ -22,6 +23,25 @@ export function RoomShell({ hat, children, feedback, status, canContinue, score 
   const idx = HAT_ORDER.indexOf(hat);
   const next = HAT_ORDER[idx + 1];
 
+  // The room's character walks in from the edge and settles into its niche, once per visit.
+  const fresh = useOnce(`room:${j.id}:${hat}`);
+  const nicheRef = useRef<HTMLDivElement>(null);
+  const [arrival, setArrival] = useState<{ from: Box; to: Box } | null>(null);
+  const [guiding, setGuiding] = useState(fresh);
+  useEffect(() => {
+    if (!fresh) return;
+    const t = setTimeout(() => {
+      const n = boxOf(nicheRef.current);
+      if (!n) return setGuiding(false);
+      const h = 300, w = 200;
+      setArrival({
+        from: { left: -w - 20, top: window.innerHeight - h - 20, width: w, height: h },
+        to: { left: n.left + n.width / 2 - w / 2, top: n.top + n.height / 2 - h * 0.17, width: w, height: h },
+      });
+    }, 350);
+    return () => clearTimeout(t);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   function proceed() {
     if (!canContinue) return;
     completeRoom(hat, score());
@@ -39,7 +59,7 @@ export function RoomShell({ hat, children, feedback, status, canContinue, score 
       </div>
 
       <div className="room-head">
-        <motion.div className="room-head__face khaki" initial={{ y: -30, rotate: -12, opacity: 0 }} animate={{ y: 0, rotate: 0, opacity: 1 }} transition={{ type: "spring", stiffness: 160, damping: 14 }}>
+        <motion.div ref={nicheRef} className="room-head__face khaki" initial={{ y: -30, rotate: -12, opacity: 0 }} animate={{ y: 0, rotate: 0, opacity: guiding ? 0.25 : 1 }} transition={{ type: "spring", stiffness: 160, damping: 14 }}>
           <Character hat={hat} crop="bust" eager />
         </motion.div>
         <div>
@@ -49,6 +69,16 @@ export function RoomShell({ hat, children, feedback, status, canContinue, score 
           <p style={{ fontSize: 18, fontWeight: 300, marginTop: 6, color: "var(--fg-2)" }}>{info.task}</p>
         </div>
       </div>
+
+      {guiding && arrival && (
+        <Guide
+          hat={hat}
+          from={arrival.from}
+          to={arrival.to}
+          caption={`${info.persona}: ${info.task}`}
+          onDone={() => setGuiding(false)}
+        />
+      )}
 
       <div className="room-grid">
         <section className="stack" style={{ ["--gap" as string]: "26px" }}>
