@@ -576,3 +576,8 @@ select.field { appearance: none; cursor: pointer; }
   border: 1px solid var(--line-2); border-inline-start: 3px solid var(--hat);
   box-shadow: var(--shadow-2); pointer-events: none;
 }
+
+/* כתבות: הרכיב המשותף על נייר בהיר, גם במצב כהה, והדף נגלל רגיל */
+.page--creations { max-width: 1320px; }
+.page--creations app-creations { background: #f3f1ec; color: #19191a; border-radius: 18px; padding: 28px 24px 40px; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28); }
+@media (max-width: 640px) { .page--creations app-creations { padding: 18px 12px 28px; border-radius: 12px; } }

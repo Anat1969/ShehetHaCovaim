@@ -23,6 +23,7 @@ export function TopBar() {
       {active && <NavLink to="/map">המסע שלי</NavLink>}
       <NavLink to="/profile">פרופיל החשיבה</NavLink>
       <NavLink to="/hats">הכובעים</NavLink>
+      <NavLink to="/creations">כתבות</NavLink>
     </>
   );
   const tools = (
