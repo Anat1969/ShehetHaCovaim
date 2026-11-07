@@ -11,6 +11,7 @@ import JourneyMap from "@/pages/JourneyMap";
 import Room from "@/pages/Room";
 import Summary from "@/pages/Summary";
 import Profile from "@/pages/Profile";
+import Creations from "@/pages/Creations";
 import NotFound from "@/pages/NotFound";
 
 export default function App() {
@@ -43,6 +44,7 @@ export default function App() {
             <Route path="/room/:hat" element={<Room />} />
             <Route path="/summary" element={<Summary />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/creations" element={<Creations />} />
             <Route path="/palette" element={<Navigate to="/" replace />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

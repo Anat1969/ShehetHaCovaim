@@ -40,3 +40,9 @@
 
 ## A&I logo button
 The top bar holds only the app name (links home), content navigation, and ONE logo button "אד' ענת שטיבלמן A&I" (`<ai-menu>` from https://appofapp-gh.vercel.app/ai-menu.js). Every editing and development action (העתקת קישור, שיחת הפיתוח, פרויקט המחקר, התקנת האפליקציה, edit mode, add, delete) lives only inside it, never as loose buttons. Standard: https://github.com/Anat1969/AppOfApp-GH/blob/main/docs/ai-menu-standard.md
+
+## יומן תיקונים
+- 07.11.2026: דף **"כתבות"** (`/creations`, קישור בסרגל), לבקשת ענת: כתבה בעמוד A4 אחד לכל נושא, "יצירת כתבה", הורדה והדפסה, והעלאה לחדר של האפליקציה במוזיאון (TAARUCHA, `room-covaim`). הרכיב המשותף `<app-creations>` מ-AppOfApp-GH, בפורמט **מגזין**: הדמות על חאקי בשליש העליון, וצבע הכובע בכל כתבה.
+  - **8** כתבות (ידע: השיטה, הכובע הלבן; הבנה: האדום, השחור והצהוב, הירוק; יישום: הכחול, מטרה, חוזרים אחרי שבוע), ו-**23** מקורות ל"יצירת כתבה".
+  - **מקור:** `tools/creations.mjs` גוזר את `public/creations.json` מ-`src/lib/hats.tsx` ומהטקסטים שבחדרים ובדפים. כל משפט נבדק מול הקוד ב-`src/`, וההייקו מסומנים "הייקו מקורי". התמונות ב-`public/creations/img`: הדמויות של האפליקציה על רקע חאקי.
+  - **הפקה מחדש:** `node tools/creations.mjs`, ואחר כך `npm run build`. בדיקה: `npx vite preview --port 4173` ואז `node tests/creations.cjs`.
